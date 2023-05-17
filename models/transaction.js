@@ -9,17 +9,22 @@ const transactionSchema = new Schema({
   },
   description: {
     type: String,
-    required: true,
   },
-  category: {
-    type: String,
+  categoryId: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
     required: true,
   },
   date: {
     type: Date,
     default: Date.now,
   },
-  user: {
+  type: {
+    type: String,
+    enum: ["income", "expense"],
+    required: true,
+  },
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,

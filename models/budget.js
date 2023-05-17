@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const budgetSchema = new Schema({
-  category: {
+  categoryId: {
     type: Schema.Types.ObjectId,
     ref: "Category",
     required: true,
@@ -20,7 +20,7 @@ const budgetSchema = new Schema({
     type: Date,
     required: true,
   },
-  user: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,

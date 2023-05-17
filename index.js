@@ -2,22 +2,31 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import cors from "cors";
 import express from "express";
-
+import budgetsRoutes from "../Backend/routes/budgetsRoutes.js";
+import categoriesRoutes from "../Backend/routes/categoriesRoutes.js";
+import notificationsRoutes from "./routes/notificationsRoutes.js";
+import transactionsRoutes from "./routes/transactionsRoutes.js";
+import userRoutes from "./routes/userRoutes.js"
 
 dotenv.config();
 const port = process.env.PORT || 8000;
 connectDB();
 const app = express();
 const corsOptions = {
-    origin: "*",
+  origin: "*",
 };
 app.use(express.json());
 app.use(cors(corsOptions));
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-//you use these inorder to use the body data
-
+app.use("/api/budgets", budgetsRoutes);
+app.use("/api/categories", categoriesRoutes);
+app.use("/api/notifications", notificationsRoutes);
+app.use("/api/transactions", transactionsRoutes);
+app.use('/api/users',userRoutes)
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
