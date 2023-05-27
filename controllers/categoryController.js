@@ -4,11 +4,13 @@ import Category from "../models/category.js";
 // Create a new category
 const createCategory = async (req, res) => {
   try {
-    const { name, type, userId } = req.body;
+    const { name, type, userId, color, icon } = req.body;
     const newCategory = new Category({
       name,
       type,
       userId,
+      color,
+      icon,
     });
     const savedCategory = await newCategory.save();
     res.json(savedCategory);
@@ -20,22 +22,25 @@ const createCategory = async (req, res) => {
 // Get all categories for a user
 const getCategoriesByUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const categories = await Category.find({ userId });
+    const { userId, type } = req.query;
+
+    const categories = await Category.find({ userId, type });
     res.json(categories);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to fetch categories" });
   }
 };
+
 
 // Update a category
 const updateCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const { name, type } = req.body;
+    const { name, type, color, icon } = req.body;
     const updatedCategory = await Category.findByIdAndUpdate(
       categoryId,
-      { name, type },
+      { name, type, color, icon },
       { new: true }
     );
     res.json(updatedCategory);

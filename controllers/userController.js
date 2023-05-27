@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs"; //to hash our passwords
+import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
+import seedDatabase from "../seeds/seeds.js";
 import User from "../models/user.js";
+
 
 //@desc Register new user
 //@route POST/api/users
@@ -13,14 +15,14 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Please add the fields");
   }
 
-  //check if user exists
+  // Check if user exists
   const userExist = await User.findOne({ email });
   if (userExist) {
     res.status(400);
     throw new Error("User already exists");
   }
 
-  //Hash the password, do that by bcrypt
+  // Hash the password using bcrypt
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -30,7 +32,10 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
   });
+
   if (user) {
+
+    seedDatabase(user.id);
     res.status(201).json({
       _id: user.id,
       name: user.name,
@@ -41,8 +46,18 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid user data");
   }
-  res.json({ message: "Register User" });
 });
+
+//Get All users
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
 //@desc Authenticate a user
 //@route POST/api/users/login
@@ -51,7 +66,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  //check for user email
+  // Check for user email
   if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
       _id: user.id,
@@ -68,7 +83,6 @@ const loginUser = asyncHandler(async (req, res) => {
 //@desc Get user data
 //@route GET/api/users/me
 //@access Private
-// We need middleware, which is a function that runs during a request/respond cycle
 const getMe = asyncHandler(async (req, res) => {
   const { _id, name, email } = await User.findById(req.user.id);
   res.status(200).json({
@@ -85,4 +99,16 @@ const generateToken = (id) => {
   });
 };
 
-export { registerUser, loginUser, getMe };
+//Delete a User
+const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findByIdAndRemove(userId);
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+};
+
+export { registerUser, loginUser, getMe, getAllUsers, deleteUser };

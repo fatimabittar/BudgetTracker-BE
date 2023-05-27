@@ -19,11 +19,7 @@ const transactionSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  type: {
-    type: String,
-    enum: ["income", "expense"],
-    required: true,
-  },
+  
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",

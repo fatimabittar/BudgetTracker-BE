@@ -3,18 +3,22 @@ import Transaction from "../models/transaction.js";
 // Create a new transaction
 const createTransaction = async (req, res) => {
   try {
-    const { categoryId, amount, description, date, userId, type } = req.body;
+    const { categoryId, amount, description, date, userId } = req.body;
     const newTransaction = new Transaction({
       categoryId,
       amount,
       description,
       date,
-      type,
       userId,
     });
+
+
     const savedTransaction = await newTransaction.save();
+    console.log(savedTransaction);
     res.json(savedTransaction);
+
   } catch (error) {
+    console.error('Failed to create transaction', error);
     res.status(500).json({ error: "Failed to create transaction" });
   }
 };
@@ -23,10 +27,28 @@ const createTransaction = async (req, res) => {
 const getTransactionsByUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    const transactions = await Transaction.find({ userId });
-    res.json(transactions);
+    const transactions = await Transaction.find({ userId }).populate('categoryId').exec()
+    const items = transactions.map((item) => {
+      const formattedDate = new Date(item.date).toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      });
+      return {
+        id: item._id,
+        date: formattedDate,
+        categoryId: item.categoryId._id,
+        categoryName: item.categoryId.name,
+        type: item.categoryId.type,
+        description: item.description,
+        amount: item.amount,
+        icon: item.categoryId.icon,
+        color: item.categoryId.color,
+      }
+    })
+    res.json(items);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch transactions" });
+    res.status(500).json(error);
   }
 };
 

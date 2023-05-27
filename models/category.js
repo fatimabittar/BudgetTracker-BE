@@ -9,7 +9,15 @@ const categorySchema = new Schema({
   },
   type: {
     type: String,
+    enum: ["income", "expense"],
     required: true,
+  },
+  color: {
+    type: String,
+  },
+  icon: {
+    type: String,
+    required: true
   },
   userId: {
     type: Schema.Types.ObjectId,
