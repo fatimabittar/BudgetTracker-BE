@@ -6,6 +6,7 @@ import budgetsRoutes from "../Backend/routes/budgetsRoutes.js";
 import categoriesRoutes from "../Backend/routes/categoriesRoutes.js";
 import notificationsRoutes from "./routes/notificationsRoutes.js";
 import transactionsRoutes from "./routes/transactionsRoutes.js";
+import reportsRoutes from "./routes/reportsRoutes.js";
 import userRoutes from "./routes/userRoutes.js"
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use("/api/budgets", budgetsRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/notifications", notificationsRoutes);
 app.use("/api/transactions", transactionsRoutes);
+app.use('/api/reports', reportsRoutes)
 app.use('/api/users',userRoutes)
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
