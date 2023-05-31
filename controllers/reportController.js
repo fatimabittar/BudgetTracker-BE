@@ -112,6 +112,7 @@ const getExpensesPerDay = async (req, res) => {
         },
       },
     ]);
+    console.log(expensesPerDay);
     const expensesByDay = rearrangedDays.map((day) => {
       const matchingExpense = expensesPerDay.find((item) => daysOfWeek[item._id - 1] === day);
       return {
@@ -132,7 +133,7 @@ const getExpenseCategories = async (req, res) => {
     const { userId } = req.params;
     const currentDate = new Date();
     const startOfMonth = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1));
-    const endOfMonth = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth() + 1, 0));
+    const endOfMonth = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
 
     const expenseCategories = await Transaction.aggregate([
       {
@@ -140,7 +141,7 @@ const getExpenseCategories = async (req, res) => {
           userId: new mongoose.Types.ObjectId(userId),
           date: {
             $gte: startOfMonth,
-            $lte: endOfMonth,
+            $lt: endOfMonth,
           },
         },
       },
@@ -233,7 +234,6 @@ const getCurrentAmountInWallet = async (req, res) => {
       {
         $match: {
           userId: new mongoose.Types.ObjectId(userId),
-          'category.type': 'expense',
         },
       },
       {
