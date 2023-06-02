@@ -42,6 +42,7 @@ const getTotalBudgetsAndSpentAmount = async (req, res) => {
     const unbudgetedTransactionsPipeline = [
       {
         $match: {
+          userId: new mongoose.Types.ObjectId(userId),
           categoryId: { $nin: categoryIds },
           date: { $gte: startOfMonth, $lte: endOfMonth },
         },
