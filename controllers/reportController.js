@@ -44,6 +44,7 @@ const getTotalBudgetsAndSpentAmount = async (req, res) => {
         $match: {
           userId: new mongoose.Types.ObjectId(userId),
           categoryId: { $nin: categoryIds },
+          type: "expense", // Add this line to filter by expense type
           date: { $gte: startOfMonth, $lte: endOfMonth },
         },
       },
