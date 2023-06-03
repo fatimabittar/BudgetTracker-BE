@@ -76,7 +76,7 @@ const getExpensesPerDay = async (req, res) => {
   try {
     const { userId } = req.params;
     const currentDate = new Date();
-    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const currentDay = new Date().getDay();
 
     const rearrangedDays = [...daysOfWeek.slice(currentDay), ...daysOfWeek.slice(0, currentDay)];
