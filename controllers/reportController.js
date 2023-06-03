@@ -79,7 +79,7 @@ const getExpensesPerDay = async (req, res) => {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const currentDay = new Date().getDay();
 
-    const rearrangedDays = [...daysOfWeek.slice(currentDay + 1), ...daysOfWeek.slice(0, currentDay - 1)];
+    const rearrangedDays = [...daysOfWeek.slice(currentDay + 1), ...daysOfWeek.slice(0, currentDay + 1)];
 
     const expensesPerDay = await Transaction.aggregate([
       {
